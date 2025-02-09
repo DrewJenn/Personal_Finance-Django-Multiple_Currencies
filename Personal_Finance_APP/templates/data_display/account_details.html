@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Records</title>
+    <style>
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;  
+            display: flex;
+            justify-content: center; 
+            align-items: flex-start; 
+            font-family: Arial, sans-serif; 
+        }
+
+        .content-wrapper {
+            width: 80%;  
+            max-width: 800px; 
+            margin-top: 20px; 
+            padding: 20px;
+            background-color: #f9f9f9;  
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            border-radius: 10px;  
+        }
+
+        h1, h2 {
+            color: #333; 
+            text-align: center;  
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {border: 1px solid #ddd;}
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {background-color: #f2f2f2;}
+
+        .plot-image {
+            width: 100%; 
+            margin-top: 30px;  
+            border: 1px solid #ddd;  
+            border-radius: 8px;  
+        }
+
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <h1>Account Details</h1>
+        <h2>Transaction Table</h2>
+        <div>
+            {{ table_html|safe }} 
+        </div>
+    </div>
+</body>
+</html>
