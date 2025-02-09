@@ -26,7 +26,7 @@ stock_tickers = [
     'ORCL', 'CRM', 'WFC', 'GS', 'LMT']
 
 class Command(BaseCommand):
-    help = 'Updates exchange rates to USD every 5 minutes and prints the updated rates.'
+    help = 'Calculates discrepencies between currency values and Stock prices USD in background thread.'
 
     def handle(self, *args, **kwargs):
         self.print_exchange_rates_in_background()
