@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('{% static "images/home_page.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #f8f9fa; 
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.7); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); 
+        }
+
+        .btn {
+            width: 160px;
+            font-size: 1.2em;
+            padding: 12px;
+            margin: 15px 10px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease; 
+        }
+
+        .btn-login {
+            background-color: #28a745; 
+            color: white;
+            border: none;
+        }
+
+        .btn-signup {
+            background-color: #007bff; 
+            color: white;
+            border: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9; 
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {font-size: 2rem;}
+
+            .btn {
+                width: 140px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your Personal Finance Tracker</h1>
+        <a href="{% url 'login_page' %}" class="btn btn-login">Login</a>
+        <a href="{% url 'signup_page' %}" class="btn btn-signup">Sign Up</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
