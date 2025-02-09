@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Bank Account</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {margin-bottom: 15px;}
+
+        label {
+            font-size: 16px;
+            color: #555;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {background-color: #0056b3;}
+
+        .form-errors {
+            color: red;
+            margin-top: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Create Bank Account</h1>
+    <form method="post">
+        {% csrf_token %}
+                <div class="form-group">
+            <label for="id_account_holder_name">Name:</label>
+            {{ form.account_holder_name }}
+        </div>
+        <div class="form-group">
+            <label for="id_bank_name">Bank Name:</label>
+            {{ form.bank_name }}
+        </div>
+        <div class="form-group">
+            <label for="id_account_type">Account Type:</label>
+            {{ form.account_type }}
+        </div>
+        <div class="form-group">
+            <label for="id_interest_rate">Interest Rate:</label>
+            {{ form.interest_rate }}
+        </div>
+        <div class="form-group">
+            <label for="id_compound_interest">Compounding Interest:</label>
+            {{ form.compound_interest }}
+        </div>
+        <div class="form-group">
+            <label for="id_compound_interest_frequency">Compounding Frequency:</label>
+            {{ form.compound_interest_frequency }}
+        </div>
+        <div class="form-group">
+            <label for="id_interest_payout_frequency">Interest Payout Frequency:</label>
+            {{ form.interest_payout_frequency }}
+        </div>
+        <div class="form-group">
+            <label for="id_initial_account_balance">Account Balance:</label>
+            {{ form.account_balance }}
+        </div>
+        <button type="submit">Create Account</button>
+    </form>
+    {% if form.errors %}
+        <div class="form-errors">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

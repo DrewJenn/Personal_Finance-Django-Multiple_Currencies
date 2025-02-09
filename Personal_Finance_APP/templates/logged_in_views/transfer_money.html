@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Money</title>
+    <script>
+        function removeselectedvalue() {
+            // should not be able tansfer between the same account
+        }
+    </script>
+</head>
+<body>
+    <h1>Transfer Money</h1>
+
+    {% if accounts %}
+        <h2>Select an Account</h2>
+        <form method="POST" action="{% url 'transfer_money' %}">
+            {% csrf_token %}  
+            <fieldset>
+                <legend>Withdrawal</legend>
+                <label for="withdrawal_account">Choose Account to Withdraw From:</label>
+                <select name="withdrawal_account_id" id="withdrawal_account">
+                    <option selected value="">Select an account</option>
+                    {% for account in accounts %}
+                        <option value="{{ account.id }}">
+                            {{ account.account_holder_name }} - {{ account.bank_name }} | Balance: {{ account.account_balance }} | Type: {{ account.account_type }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </fieldset>
+            <fieldset>
+                <legend>Deposit</legend>
+                <label for="deposit_account">Choose Account to Deposit To:</label>
+                <select name="deposit_account_id" id="deposit_account">
+                    <option selected value="">Select an account</option>
+                    {% for account in accounts %}
+                        <option value="{{ account.id }}">
+                            {{ account.account_holder_name }} - {{ account.bank_name }} | Balance: {{ account.account_balance }} | Type: {{ account.account_type }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </fieldset>
+            <fieldset>
+                <legend>Amount to Transfer</legend>
+                <label for="uninitialized_amount">Amount to Transfer:</label>
+                <input type="number" name="uninitialized_amount" id="uninitialized_amount" value="{{ form_withdrawal.uninitialized_amount.value }}" required>
+                {% if form_withdrawal.uninitialized_amount.errors %}
+                    <ul>
+                        {% for error in form_withdrawal.uninitialized_amount.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
+            <button type="submit" name="submit">Transfer</button>
+        </form>
+    {% else %}
+        <p>No bank accounts found for this user. Please add an account to proceed.</p>
+    {% endif %}
+</body>
+</html>
+

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Account Actions</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display:flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .action-list li {
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .action-list li a {
+            text-decoration: none;
+            font-size: 36px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .action-list li a:hover {color: #007bff;}
+
+        .logout-button {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #ff3333;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {background-color: #cc0000;}
+        
+        .action-list li button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-align: center;
+            width: 100%;
+            max-width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-list li button:hover {
+            background-color: #0056b3;
+            transition: background-color 0.3s ease;
+        }
+        
+        .list-container {
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: flex-start; 
+            gap: 20px; 
+            padding: 20px; 
+        }
+
+        .account-list {
+            flex: 1; 
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px; 
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+
+        .account-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .account-list li {margin-bottom: 15px;}
+
+        .account-list a {
+            text-decoration: none;
+            color: black;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, border-width 0.3s ease;
+        }
+
+        .account-list a:hover {
+            background-color: #e0e0e0;
+            border-width: 2px;
+        }
+
+        .total-list {
+            flex: 1; 
+            padding: 20px;
+            background-color: #f9f9f9; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            border-radius: 8px; 
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+
+        .total-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .total-list li {
+            margin: 15px;
+            font-size: 18px;
+        }
+
+        .total-list a {
+            text-decoration: none;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, border-width 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .total-list a:hover {
+            background-color: #e0e0e0;
+            border-width: 2px;
+        }
+
+        .total-list h2 {
+            margin: 10px;
+            display: block;
+            font-size: 20px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<div class="container">
+    <h1>Bank Account Actions</h1>
+    <ul class="action-list">
+        <li>
+            <a href="{% url 'create_account' %}">
+                <button>Create a New Account</button>
+            </a>
+        </li>
+        <li>
+        {% if user.bank_accounts.exists %}
+            <a href="{% url 'account_selection_deposit' %}">
+                <button>Record a Deposit</button>
+            </a>
+        {% else %}
+            <p>You must first create an account to make a deposit.</p>
+        {% endif %}
+        </li>
+        <li>
+        {% if user.bank_accounts.exists %}
+            <a href="{% url 'account_selection_withdrawal' %}">
+                <button>Record a Withdrawal</button>
+            </a>
+        {% else %}
+            <p>You must first create an account to make a withdrawal.</p>
+        {% endif %}
+        </li>
+        <li>
+        {% if user.bank_accounts.count >= 2 %}
+            <a href="{% url 'transfer_money' %}">
+                <button>Transfer Money</button>
+            </a>
+        {% else %}
+            <p>You must first create at least 2 accounts.</p>
+        {% endif %}
+        </li>
+        <li>
+        {% if user.bank_accounts.exists %}
+            <a href="{% url 'close_account' %}">
+                <button>Close Account</button>
+            </a>
+        {% else %}
+            <p>You must first create an account.</p>
+        {% endif %}
+        </li>
+    </ul>
+    {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+    {% endif %}
+</div>
+<div class="list-container">
+    <div class="account-list">
+        {% if user.bank_accounts.exists %}
+            <ul>
+                {% for account in user.bank_accounts.all %}
+                    <li>
+                        <a href="{% url 'account_details' account.id %}">
+                            {{ account.account_holder_name }} - {{ account.bank_name }} | Balance: {{ account.account_balance }} | Type: {{ account.account_type }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No bank accounts available.</p>
+        {% endif %}
+    </div>
+    <div class="total-list">
+        {% if user.bank_accounts.exists %}
+            <h2>Total Bank Account Balances</h2>
+            <ul>
+                <li>
+                    <a href="{% url 'aggregate_values_display' 'all' conversion_currency %}">
+                        Total Account Balances: {{ total_balance }}
+                    </a>
+                </li>
+                {% for balance in total_named_balances %}
+                    <li>
+                        <a href="{% url 'aggregate_values_display' balance.account_holder_name balance.account_balance_currency %}">
+                            {{ balance.account_holder_name }}: {{ balance.total_named_balance|default:0.00 }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div>No bank accounts available.</div>
+        {% endif %}
+    </div>
+</div>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit to Account</title>
+    <script>
+        function showWithdrawalForm() {
+            var accountSelect = document.getElementById("account");
+            var withdrawalForm = document.getElementById("transaction-form");
+            var selectedAccountId = accountSelect.value;
+            if (selectedAccountId) {document.getElementById("transaction-id").value = selectedAccountId;}
+
+            if (accountSelect.value !== "") {
+                withdrawalForm.style.display = "block";
+            } else {
+                withdrawalForm.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Select an Account to Withdraw From</h1>
+    <form id="account-select-form" method="GET">
+        {% csrf_token %}
+        <label for="account">Choose an account:</label>
+        <select name="account_id" id="account">
+            <option selected value="">Select an account</option>
+            {% for account in accounts %}
+            <option value="{{ account.id }}">
+                {{ account.account_holder_name }} - {{ account.bank_name }} | Balance: {{ account.account_balance }} | Type: {{ account.account_type }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="showWithdrawalForm()">Select</button>
+    </form>
+    <div id="transaction-form" style="display:none; margin-top: 20px;">
+        <h2>Make a Withdrawal</h2>
+        
+        <form method="POST" action="{% url 'account_selection_withdrawal' %}">
+            {% csrf_token %}
+            <input type="hidden" name="account_id" value="{{ account.id }}" id="transaction-id">
+            <label for="uninitialized_amount">Amount to Deposit:</label>
+            {{ form.uninitialized_amount }}
+            <button type="submit">Record</button>
+        </form>
+    </div>
+</body>
+</html>
