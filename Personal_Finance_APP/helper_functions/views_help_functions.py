@@ -3,11 +3,6 @@ import pandas as pd
 import yfinance as yf
 from Personal_Finance_APP.models import BankAccount
 
-
-
-
-
-
 def home_get_total_balance(df):
     df['total_named_balance'] = pd.to_numeric(df['total_named_balance'], errors='coerce')
     df['total_named_balance'] = df['total_named_balance'].round(2)
@@ -25,8 +20,6 @@ def home_get_total_balance(df):
         if conversion_rate:
             df.iat[i, 1] = (df.iat[i, 1] * conversion_rate)
     return (Money(df.total_named_balance.sum(), conversion_currency), conversion_currency)
-
-
 
 
 def get_exchange_rate(base_currency, target_currency):
@@ -71,3 +64,15 @@ def get_selected_account(user, account_id):
         return user.bank_accounts.first()  
     return None
 
+def get_real_time_stock_price(ticker: str) -> float:
+    try:
+        ticker_yahoo = yf.Ticker(ticker)
+        data = ticker_yahoo.history()
+        last_quote = data['Close'].iloc[-1]
+        return last_quote
+    except KeyError:
+        print(f"Error: Unable to fetch real-time data for {ticker}. Maybe the ticker is invalid.")
+        return None
+    except Exception as e:
+        print(f"Error retrieving data for {ticker}: {e}")
+        return None
