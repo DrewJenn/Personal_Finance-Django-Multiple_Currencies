@@ -92,9 +92,13 @@ def aggregate_by_name_GETBALANCE(table_html, currency):
 
 def convert_df_money_objects(table_html, currency):
     try:
+        table_i_1, table_i_2 = [], []
         for i in range(table_html.shape[0]):
-            table_html.iat[i, 1] = Money(table_html.iat[i, 1], currency)
-            table_html.iat[i, 2] = Money(table_html.iat[i, 2], currency)
+            table_i_1.append(Money(table_html.iat[i, 1], currency))
+            table_i_2.append(Money(table_html.iat[i, 2], currency))
+        table_html["Amount"] = table_i_1
+        table_html["Balance"] = table_i_2
         return table_html
     except:
         return table_html
+
