@@ -37,7 +37,7 @@ class BankAccount(models.Model):
         super().save(*args, **kwargs)    
 
     def get_currency(self):
-        return self.account_balance.currency
+        return str(self.account_balance.currency)
     
     def get_amount(self):
         return self.account_balance.amount
