@@ -23,6 +23,8 @@ def home_get_total_balance(df):
 
 
 def get_exchange_rate(base_currency, target_currency):
+    if base_currency == target_currency:
+        return 1
     ticker_symbol = f"{base_currency}{target_currency}=X"
     try:
         ticker = yf.Ticker(ticker_symbol)
