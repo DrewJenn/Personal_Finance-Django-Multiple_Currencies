@@ -43,6 +43,7 @@ def aggregate_all(accounts, currency):
     table_html = pd.DataFrame({'Date':pd.to_datetime(dates), 'Amount':transaction, 'Deposit':deposit, 'Withdrawal':withdrawal})
     table_html = table_html.sort_values(by='Date', ascending=True).reset_index().drop(columns='index')
     table_html = aggregate_by_name_GETBALANCE(table_html, currency)
+    table_html = table_html[table_html["Amount"] != Money(0.00, currency)]
     return table_html
 
 
@@ -68,6 +69,7 @@ def aggregate_df_by_name(accounts, currency):
     table_html = pd.DataFrame({'Date':pd.to_datetime(dates), 'Amount':transaction, 'Deposit':deposit, 'Withdrawal':withdrawal})
     table_html = table_html.sort_values(by='Date', ascending=True).reset_index().drop(columns='index')
     table_html = aggregate_by_name_GETBALANCE(table_html, currency)
+    table_html = table_html[table_html["Amount"] != Money(0.00, currency)]
     return table_html
 
 
