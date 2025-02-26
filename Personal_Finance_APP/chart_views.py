@@ -29,7 +29,6 @@ def account_details(request, id):
     for i in range(table_html.shape[0]):
         table_html_1.append(Money(table_html.at[i, 'Balance'], currency))
     table_html["Balance"] = table_html_1
-    print(table_html)
     table_html = table_html.to_html(index=False)
     return render(request, 'data_display/account_details.html', {'table_html':table_html})
 
