@@ -40,9 +40,9 @@ def aggregate_values_display(request, account_holder_name, account_balance_curre
     if account_holder_name == 'all':
         accounts = BankAccount.objects.filter(user=request.user)       
         answer = helper.aggregate_all(accounts, account_balance_currency)
-        table_html = answer.to_html(index=False)
+        table_html = answer.to_html(index=False, col_space=90)
     else:
         accounts = BankAccount.objects.filter(account_holder_name=account_holder_name, user=request.user, account_balance_currency=account_balance_currency)   #only handles one currency
         answer = helper.aggregate_df_by_name(accounts, account_balance_currency)    
-        table_html = answer.to_html(index=False)
+        table_html = answer.to_html(index=False, col_space=90)
     return render(request, 'data_display/aggregate_values_display.html', {'table_html':table_html})
