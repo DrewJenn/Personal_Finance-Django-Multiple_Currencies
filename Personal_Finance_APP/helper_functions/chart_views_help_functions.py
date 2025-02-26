@@ -74,16 +74,16 @@ def aggregate_df_by_name(accounts, currency):
 
 
 def aggregate_by_name_GETBALANCE(table_html, currency):
-    table_html['Balance'], balance = np.nan, 0
+    table_html['Balance'], balance, transaction_type = np.nan, 0, []
     for i in range(table_html.shape[0]):
         if table_html.iat[i, 2]:
             balance += table_html.iat[i, 1]
-            transaction_type = 'Deposit'
+            transaction_type.append("Deposit")
         else:
             balance -= table_html.iat[i, 1]
-            transaction_type = 'Withdrawal'
+            transaction_type.append('Withdrawal')
         table_html.iat[i, 4] = balance
-        table_html.iat[i, 2] = transaction_type
+    table_html["Deposit"] = transaction_type
     table_html = table_html[['Date', 'Amount', 'Balance', 'Deposit']].rename(columns = {'Deposit':'Transaction Type'})
     table_html = convert_df_money_objects(table_html, currency)
     return table_html
