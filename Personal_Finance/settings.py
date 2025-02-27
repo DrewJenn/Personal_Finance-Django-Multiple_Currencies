@@ -134,10 +134,16 @@ CURRENCY_CHOICES = [('USD', 'USD $'), ('EUR', 'EUR €'), ('AED', 'AED د.إ'), 
                     ('SLL', 'SLL Le'), ('SOS', 'SOS Sh'), ('SRD', 'SRD $'), ('STN', 'STN Db'), ('SVC', 'SVC $'), 
                     ('SYP', 'SYP ل.س'), ('SZL', 'SZL L'), ('THB', 'THB ฿'), ('TJS', 'TJS ЅМ'), ('TMT', 'TMT ман'),
                     ('TND', 'TND د.ت'), ('TOP', 'TOP T$'), ('TRY', 'TRY ₺'), ('TTD', 'TTD $'), ('TWD', 'TWD NT$'),
-                    ('TZS', 'TZS Sh'), ('UAH', 'UAH ₴'), ('UGX', 'UGX USh'), ('USD', 'USD $'), ('UYU', 'UYU $'), 
+                    ('TZS', 'TZS Sh'), ('UAH', 'UAH ₴'), ('UGX', 'UGX USh'), ('UYU', 'UYU $'), 
                     ('UZS', 'UZS сўм'), ('VES', 'VES Bs.S'), ('VND', 'VND ₫'), ('VUV', 'VUV Vt'), ('WST', 'WST T'),
                     ('XAF', 'XAF CFA'), ('XCD', 'XCD $'), ('XDR', 'XDR'), ('XOF', 'XOF CFA'), ('XPF', 'XPF CFP'),
                     ('YER', 'YER ﷼'), ('ZAR', 'ZAR R'), ('ZMW', 'ZMW ZK'),]
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-exchange-rate-cache",
+    }
+}
 
 
 
