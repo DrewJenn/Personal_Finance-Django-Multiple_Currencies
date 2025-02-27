@@ -21,42 +21,36 @@ def home_get_total_balance(df):
             df.iat[i, 1] = (df.iat[i, 1] * conversion_rate)
     return (Money(df.total_named_balance.sum(), conversion_currency), conversion_currency)
 
-
-def get_exchange_rate(base_currency, target_currency):
+def get_exchange_rate(base_currency, target_currency, check = 0):
     if base_currency == target_currency:
         return 1
     ticker_symbol = f"{base_currency}{target_currency}=X"
+    cached_rate = cache.get(ticker_symbol)
+    if cached_rate:
+        return cached_rate
     try:
         ticker = yf.Ticker(ticker_symbol)
         data = ticker.history(period="1d") 
         exchange_rate = data['Close'].iloc[-1] 
+        cache.set(ticker_symbol, exchange_rate, timeout=1800)
         return exchange_rate
-    except Exception as e:
-        print(f"Error fetching exchange rate: {e}")
-        answer = secondary_get_exchange_rate(base_currency, target_currency)
-        if answer:
-            return answer
+    except:
+        if check == 0:
+            try:
+                answer = secondary_get_exchange_rate(base_currency, target_currency)
+            except Exception as secondary_error:
+                print(f"Error in secondary method: {secondary_error}")
+                answer = None
         else:
-            return None  
+            answer = None
+        if answer:
+            cache.set(ticker_symbol, answer, timeout=1800)
+        return answer
         
 def secondary_get_exchange_rate(base_currency, target_currency):
-    base_to_usd = extra_get_exchange_rate(base_currency, "USD")
-    target_to_usd = extra_get_exchange_rate(target_currency, "USD")
     try:
-        answer = (base_to_usd / target_to_usd)
-        return answer
+        return(get_exchange_rate(base_currency, "USD", 1) / get_exchange_rate(target_currency, "USD", 1))
     except:
-        return None
-
-def extra_get_exchange_rate(base_currency, target_currency):
-    ticker_symbol = f"{base_currency}{target_currency}=X"
-    try:
-        ticker = yf.Ticker(ticker_symbol)
-        data = ticker.history(period="1d") 
-        exchange_rate = data['Close'].iloc[-1] 
-        return exchange_rate
-    except Exception as e:
-        print(f"Error fetching exchange rate: {e}")
         return None
 
 def get_selected_account(user, account_id):
