@@ -42,8 +42,6 @@ def get_exchange_rate(base_currency, target_currency, check = 0):
             except Exception as secondary_error:
                 print(f"Error in secondary method: {secondary_error}")
                 answer = None
-        else:
-            answer = None
         if answer:
             cache.set(ticker_symbol, answer, timeout=1800)
         return answer
