@@ -43,5 +43,5 @@ urllib3==2.3.0
 virtualenv==20.29.1
 VirtualEnvironment==0.1.2
 webencodings==0.5.1
-yfinance==0.2.52
+yfinance==0.2.54
 zope.interface==7.2
