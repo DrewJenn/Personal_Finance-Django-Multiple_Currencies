@@ -21,6 +21,7 @@ def home_get_total_balance(df):
             df.iat[i, 1] = (df.iat[i, 1] * conversion_rate)
     return (Money(df.total_named_balance.sum(), conversion_currency), conversion_currency)
 
+
 def get_exchange_rate(base_currency, target_currency, check = 0):
     if base_currency == target_currency:
         return 1
@@ -37,7 +38,7 @@ def get_exchange_rate(base_currency, target_currency, check = 0):
     except:
         if check == 0:
             try:
-                answer = secondary_get_exchange_rate(base_currency, target_currency)
+                answer = (get_exchange_rate(base_currency, "USD", 1) / get_exchange_rate(target_currency, "USD", 1))
             except Exception as secondary_error:
                 print(f"Error in secondary method: {secondary_error}")
                 answer = None
@@ -46,12 +47,6 @@ def get_exchange_rate(base_currency, target_currency, check = 0):
         if answer:
             cache.set(ticker_symbol, answer, timeout=1800)
         return answer
-        
-def secondary_get_exchange_rate(base_currency, target_currency):
-    try:
-        return(get_exchange_rate(base_currency, "USD", 1) / get_exchange_rate(target_currency, "USD", 1))
-    except:
-        return None
 
 def get_selected_account(user, account_id):
     if user.bank_accounts.exists():
