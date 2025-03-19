@@ -1,7 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-    <h1>Select an Account That You Wish to Close</h1>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+    
+        .container {
+            text-align: center;
+            padding: 2px;
+        }
+        
+        </style>
     <body>
+        <div class="container">
+            <h1>Close an Account</h1>
         <form id="account-id-form" method="POST">
             {% csrf_token %}
             <label for="account">Choose an account:</label>
@@ -15,5 +31,6 @@
             </select>
             <button type="submit">Close Account</button>
         </form>
+        </div>
     </body>
 </html>
