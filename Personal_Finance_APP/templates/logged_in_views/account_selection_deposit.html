@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deposit to Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2px;
+        }
+    </style>
     <script>
         function showDepositForm() {
             var accountSelect = document.getElementById("account");
@@ -19,6 +32,7 @@
     </script>
 </head>
 <body>
+    <div class="container">
     <h1>Select an Account to Deposit Into</h1>
     <form id="account-select-form" method="GET">
         {% csrf_token %}
@@ -34,7 +48,6 @@
         <button type="button" onclick="showDepositForm()">Select</button>
     </form>
     <div id="transaction-form" style="display:none; margin-top: 20px;">
-        <h2>Make a Deposit</h2>
         <form method="POST" action="{% url 'account_selection_deposit' %}">
             {% csrf_token %}
             <input type="hidden" name="account_id" value="{{ account.id }}" id="transaction-id">
@@ -43,6 +56,8 @@
             <button type="submit">Record</button>
         </form>
     </div>
+</div>
 </body>
 </html>
+
 
