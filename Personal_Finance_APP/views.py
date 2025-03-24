@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
-from django.contrib import messages
+from .authentication import CustomAuthBackend
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Sum
 from moneyed import Money
 import pandas as pd
@@ -9,9 +9,7 @@ from django.db import transaction
 from .forms import SignUpForm, CustomLoginForm, CreateBankAccount, Deposit, Withdrawal, CloseAccount
 from .models import BankAccount, BankRecord
 from .helper_functions import views_help_functions as helper
-
-
-
+from django.contrib.auth import login as auth_login
 
 def index(request):
     return render(request, 'initial_views/home_page.html')
@@ -19,37 +17,41 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        form = CustomLoginForm(request=request, data=request.POST)
+        form = CustomLoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
+            username = form.cleaned_data['username']  
+            password = form.cleaned_data['password']  
+            custom_backend = CustomAuthBackend()
+            user = custom_backend.authenticate(request=request, username=username, password=password)
             if user is not None:
-                auth_login(request, user)
-                return redirect('user_home_screen') 
+                auth_login(request, user, backend='Personal_Finance_APP.authentication.CustomAuthBackend')
+                messages.success(request, "You have been successfully logged in!")
+                return redirect('user_home_screen')  
             else:
-                messages.error(request, "Invalid username or password.")
+                messages.error(request, "Invalid username or password.")  
         else:
-            messages.error(request, "Please fill out the form correctly")
+            messages.error(request, "Please fill out the form correctly") 
     else:
-        form = CustomLoginForm()
-    return render(request, 'initial_views/login_page.html', {'form':form})
+        form = CustomLoginForm() 
+    return render(request, 'initial_views/login_page.html', {'form': form})
+
 
 
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
+            user = form.save(commit=False)  # Don't save yet
+            user.set_password(form.cleaned_data['password'])  # Hash password
+            user.save()  # Now save user after setting password
+            auth_login(request, user)  # Log the user in
             messages.success(request, "Your account has been created successfully!")
-            return redirect('user_home_screen')
+            return redirect('user_home_screen')  
         else:
             messages.error(request, "There was an error with your submission. Please try again.")
     else:
         form = SignUpForm()  
-    return render(request, 'initial_views/signup_page.html', {'form':form})
-
+    return render(request, 'initial_views/signup_page.html', {'form': form})
 
 @login_required
 def home(request):
@@ -71,7 +73,6 @@ def home(request):
 
 
 
-
 @login_required
 def create_account(request):
     if request.method == 'POST':
@@ -84,7 +85,6 @@ def create_account(request):
     else:
         form = CreateBankAccount()
     return render(request, 'logged_in_views/create_account.html', {'form':form})
-
 
 
 
@@ -115,9 +115,8 @@ def account_selection_deposit(request):
             form.add_error(None, "There was an error with the form.")  
     return render(request, 'logged_in_views/account_selection_deposit.html', {
         'accounts': accounts,
-        'form': form
+        'form': form,
     })
-
 
 
 @login_required
@@ -149,7 +148,6 @@ def account_selection_withdrawal(request):
         'accounts': accounts,
         'form': form
     })
-
 
 
 @login_required
@@ -190,7 +188,6 @@ def transfer_money(request):
             messages.error(request, 'Transaction failed. Please check the account balances and try again.')
             return render(request, 'logged_in_views/transfer_money.html', {'accounts':accounts, 'form_deposit':form_deposit, 'form_withdrawal':form_withdrawal})
     return render(request, 'logged_in_views/transfer_money.html', {'accounts':accounts, 'form_deposit':form_deposit, 'form_withdrawal':form_withdrawal})
-
 
 @login_required
 def close_account(request):
