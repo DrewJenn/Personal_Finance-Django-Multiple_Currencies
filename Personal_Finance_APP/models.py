@@ -1,11 +1,51 @@
 from django.db import models
-from django.contrib.auth.models import User
 from djmoney.models.fields import MoneyField
 from django.utils import timezone
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from moneyed import Money
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email, firstName, lastName, password=None):
+        if not email:
+            raise ValueError("Users must have an email address")
+        if not username:
+            raise ValueError("Users must have a username")
+
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+            firstName=firstName,
+            lastName=lastName
+        )
+        user.set_password(password)  # Hash password
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, firstName, lastName, password):
+        user = self.create_user(username, email, firstName, lastName, password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+class User(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(unique=True)
+    firstName = models.CharField(max_length=50)
+    lastName = models.CharField(max_length=50)
+    date_joined = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'firstName', 'lastName']
+
+    def __str__(self):
+        return self.username
 
 
 class BankAccount(models.Model):
@@ -70,12 +110,7 @@ class BankRecord(models.Model):
     withdrawal_record = models.BooleanField(default=False)
     transaction_amount = MoneyField(null=True, max_digits=10, decimal_places=2, default_currency='USD')
     transaction_date = models.DateField(default=timezone.now)
-
-
     new_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True) # adds balance to account record for easier graphing
-
-
-
     uninitialized_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  #temp input
 
     def get_transaction_amount(self):
@@ -86,4 +121,4 @@ class BankRecord(models.Model):
 
 @receiver(pre_save, sender=BankRecord)
 def set_transaction_amount_currency(sender, instance, **kwargs):
-    instance.transaction_amount = Money(instance.uninitialized_amount, instance.account_id.get_currency())    
+    instance.transaction_amount = Money(instance.uninitialized_amount, instance.account_id.get_currency())      
