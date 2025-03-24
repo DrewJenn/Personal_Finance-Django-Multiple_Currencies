@@ -6,7 +6,6 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -14,16 +13,16 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            margin: 0 auto;
         }
 
         .form-container {
             background-color: white;
-            padding: 50px;
-            border-radius: 20px;
+            padding: 40px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
+            width: 400px;
+            max-width: 450px;
         }
 
         .form-container h2 {
@@ -32,46 +31,71 @@
             font-weight: bold;
         }
 
-        .form-errors, .messages {
-            margin-top: 15px;
-        }
-
-        .form-errors p, .messages p {
+        .form-errors {
             color: red;
             font-size: 0.9rem;
         }
 
+        .form-label {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            border: 1px solid black; 
+            padding: 10px; 
+            margin-bottom: 0.5rem; 
+            box-sizing: border-box; 
+            border-radius: 5px; 
+        }
+
+
         .btn-primary {
             width: 100%;
             margin-top: 15px;
+            padding: 12px;
+            background-color: #7ea7d3;
+            border: 2px;
+            border-color: rgb(23, 20, 20);
+            border-radius: 5px;
+            font-size: 1.1rem;
+            color:rgb(50, 45, 45);
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            cursor: pointer;
+        }
+
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h2>Sign Up</h2>
+        <h2>Create Account</h2>
         <form method="POST" novalidate>
             {% csrf_token %}
-            {{ form.as_p }} 
+            {% for field in form %}
+                <div class="form-label">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small class="form-errors">
+                            {{ field.errors|join:", " }}
+                        </small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
             <button type="submit" class="btn btn-primary">Sign Up</button>
         </form>
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <p class="alert alert-success">{{ message }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if form.errors %}
-        <div class="form-errors">
-            {% for field in form %}
-                {% if field.errors %}
-                    <p>{{ field.name|capfirst }}: {{ field.errors|join:", " }}</p>
-                {% endif %}
-            {% endfor %}
-        </div>
-        {% endif %}
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
