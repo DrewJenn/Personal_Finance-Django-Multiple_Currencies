@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from .models import BankAccount, BankRecord
+from django.contrib.auth.decorators import login_required
 import pandas as pd
 from moneyed import Money
 from .helper_functions import chart_views_help_functions as helper
 import matplotlib
 matplotlib.use('Agg')
 
+
+@login_required
 def account_details(request, id):
     account = get_object_or_404(BankAccount, id=id)
     currency = account.get_currency()
@@ -33,8 +35,6 @@ def account_details(request, id):
     table_html = table_html.to_html(index=False)
     return render(request, 'data_display/account_details.html', {'table_html':table_html})
 
-
-
 @login_required
 def aggregate_values_display(request, account_holder_name, account_balance_currency):
     if account_holder_name == 'all':
@@ -42,7 +42,7 @@ def aggregate_values_display(request, account_holder_name, account_balance_curre
         answer = helper.aggregate_all(accounts, account_balance_currency)
         table_html = answer.to_html(index=False, col_space=90)
     else:
-        accounts = BankAccount.objects.filter(account_holder_name=account_holder_name, user=request.user, account_balance_currency=account_balance_currency)   #only handles one currency
+        accounts = BankAccount.objects.filter(account_holder_name=account_holder_name, user=request.user, account_balance_currency=account_balance_currency)   #only handles one currency testing now
         answer = helper.aggregate_df_by_name(accounts, account_balance_currency)    
         table_html = answer.to_html(index=False, col_space=90)
     return render(request, 'data_display/aggregate_values_display.html', {'table_html':table_html})
