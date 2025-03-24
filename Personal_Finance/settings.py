@@ -7,7 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', 'https://4cfa-2600-8807-9105-b100-a80f-15b3-eac1-4f']
+AUTHENTICATION_BACKENDS = ['Personal_Finance_APP.authentication.CustomAuthBackend']
+AUTH_USER_MODEL = 'Personal_Finance_APP.User'
+
+
 
 
 # Application definition
@@ -63,14 +68,8 @@ DATABASES = {
 }
 
 
-
 # Password validation
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
@@ -92,6 +91,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://a23c-2600-8807-9105-b100-6063-a7-7294-d305.ngrok-free.app',  # Add your ngrok URL here (while using ngrok change when server goes live)
     'http://localhost:4040', 
 ]
+
 
 CURRENCIES = ('AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN',
                'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF', 'CLF',
@@ -144,6 +144,7 @@ CACHES = {
         "LOCATION": "unique-exchange-rate-cache",
     }
 }
+
 
 
 
